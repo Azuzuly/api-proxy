@@ -16,8 +16,12 @@ export default async function handler(request) {
 
   // Clone the response to modify headers and body
   const responseBody = await response.text();
-  const modifiedResponseBody = responseBody.replace(/Kiro/g, 'Proxy'); // Replace "Kiro" with "Proxy"
+  const modifiedResponseBody = responseBody.replace(/Kiro/g, 'Gateway'); // Replace "Kiro" with "Gateway"
   const modifiedResponse = new Response(modifiedResponseBody, response);
+
+  // Add custom headers for a professional touch
+  modifiedResponse.headers.set('X-Powered-By', 'Gateway API');
+  modifiedResponse.headers.set('Access-Control-Allow-Origin', '*');
 
   return modifiedResponse;
 }
