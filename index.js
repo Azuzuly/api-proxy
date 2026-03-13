@@ -14,9 +14,10 @@ export default async function handler(request) {
     body: request.body,
   });
 
-  // Clone the response to modify headers
-  const modifiedResponse = new Response(response.body, response);
-  modifiedResponse.headers.set('X-Proxy', 'true'); // Optional: Add a custom header
+  // Clone the response to modify headers and body
+  const responseBody = await response.text();
+  const modifiedResponseBody = responseBody.replace(/Kiro/g, 'Proxy'); // Replace "Kiro" with "Proxy"
+  const modifiedResponse = new Response(modifiedResponseBody, response);
 
   return modifiedResponse;
 }
