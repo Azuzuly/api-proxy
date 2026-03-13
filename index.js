@@ -3,9 +3,10 @@ export const config = {
 };
 
 export default async function handler(request) {
-  const hiddenBaseUrl = 'https://api.kiro.cheap'; // Replace with your hidden API URL
+  const hiddenBaseUrl = 'https://api.kiro.cheap'; // Your hidden API URL
   const url = new URL(request.url);
-  const newUrl = hiddenBaseUrl + url.pathname + url.search;
+  const path = url.pathname.replace('/', ''); // Remove leading slash
+  const newUrl = `${hiddenBaseUrl}/${path}${url.search}`;
 
   const response = await fetch(newUrl, {
     method: request.method,
@@ -13,5 +14,9 @@ export default async function handler(request) {
     body: request.body,
   });
 
-  return response;
+  // Clone the response to modify headers
+  const modifiedResponse = new Response(response.body, response);
+  modifiedResponse.headers.set('X-Proxy', 'true'); // Optional: Add a custom header
+
+  return modifiedResponse;
 }
